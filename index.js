@@ -6,8 +6,10 @@ import axios from 'axios';
 const server = http.createServer();
 
 server.on("request", async(req,res) => {
+    console.log(`requested URL: ${req.url}`);
+
     // index page
-    if(req.url === '/' || req.url === '/index'){
+    if(req.url === '/'){
 
         const indexSrc = `public/index.html`;
         const indexPage = await fs.readFile(indexSrc,{encoding:"utf-8"});
@@ -25,9 +27,9 @@ server.on("request", async(req,res) => {
     
 
     // contact page
-    }else if(req.url === '/contact.html'){
+    }else if(req.url === '/contact-me.html'){
 
-        const contactSrc = `public/contact.html`;
+        const contactSrc = `public/contact-me.html`;
         const contactPage = await fs.readFile(contactSrc,{encoding:"utf-8"});
         res.writeHead(200,{'Content-Type':'text/html'});
         res.end(contactPage);
@@ -45,8 +47,8 @@ server.on("request", async(req,res) => {
     }else{
 
         const errorSrc = `public/404.html`;
-        const errorPage = await fs.readFile(errorSrc,{encoding:"utf-8"});
-        res.writeHead(200,{'Content-Type':'text/html'});
+        const errorPage = await fs.readFile(errorSrc, { encoding: "utf-8" });
+        res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(errorPage);
     }
 })
