@@ -34,3 +34,20 @@ p{
     line-break: anywhere;
     text-align: center;
 }
+
+.link--holder{
+    width: 60vw;
+    display: flex;
+    justify-content: space-around;
+}
+
+.link--holder > a{
+    text-decoration: none;
+    color: black;
+    padding: 20px;
+    border-bottom: 1px solid black;
+}
+
+.link--holder >a:hover{
+    border-bottom: 1px dashed black;
+}
