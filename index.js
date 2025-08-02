@@ -1,72 +1,52 @@
-import http from 'http';
 import fs from 'fs/promises';
-import axios from 'axios';
+import express from 'express';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
-const server = http.createServer();
+const app = express();
+const port = process.env.PORT;
 
-server.on("request", async(req,res) => {
-    console.log(`requested URL: ${req.url}`);
+app.get("/", async(req,res) => {
+    const src = `public/index.html`;
+    const page = await fs.readFile(src,{encoding:"utf-8"});
+    res.status(200);
+    res.set({'Content-Type':'text/html'});
+    res.send(page);
+});
 
-    // index page
-    if(req.url === '/'){
+app.get("/about.html", async(req,res) => {
+    const src = `public/about.html`;
+    const page = await fs.readFile(src,{encoding:"utf-8"});
+    res.status(200);
+    res.set({'Content-Type':'text/html'});
+    res.send(page);
+});
 
-        const indexSrc = `public/index.html`;
-        const indexPage = await fs.readFile(indexSrc,{encoding:"utf-8"});
-        res.writeHead(200,{'Content-Type':'text/html'});
-        res.end(indexPage);
+app.get("/contact-me.html", async(req,res) => {
+    const src = `public/contact-me.html`;
+    const page = await fs.readFile(src,{encoding:"utf-8"});
+    res.status(200);
+    res.set({'Content-Type':'text/html'});
+    res.send(page);
+});
 
-    
-    // about page
-    }else if(req.url === '/about.html'){
+app.get("/style.css", async(req,res) => {
+    const src = `public/style.css`;
+    const page = await fs.readFile(src,{encoding:"utf-8"});
+    res.status(200);
+    res.set({'Content-Type':'text/css'});
+    res.send(page);
+});
 
-        const aboutSrc = `public/about.html`;
-        const aboutPage = await fs.readFile(aboutSrc,{encoding:"utf-8"});
-        res.writeHead(200,{'Content-Type':'text/html'});
-        res.end(aboutPage);
-    
+app.use(async (req,res) => {
+    const src = `public/404.html`;
+    const page = await fs.readFile(src,{encoding:"utf-8"});
+    res.status(404);
+    res.set({'Content-Type':'text/html'});
+    res.send(page);
+}) 
 
-    // contact page
-    }else if(req.url === '/contact-me.html'){
-
-        const contactSrc = `public/contact-me.html`;
-        const contactPage = await fs.readFile(contactSrc,{encoding:"utf-8"});
-        res.writeHead(200,{'Content-Type':'text/html'});
-        res.end(contactPage);
-    
-
-    // stylesheet 
-    }else if(req.url === '/style.css'){
-
-        const cssSrc = `public/style.css`;
-        const cssFile = await fs.readFile(cssSrc,{encoding:"utf-8"});
-        res.writeHead(200,{'Content-Type':'text/css'});
-        res.end(cssFile);
-    
-    // error page || 404 page
-    }else{
-
-        const errorSrc = `public/404.html`;
-        const errorPage = await fs.readFile(errorSrc, { encoding: "utf-8" });
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(errorPage);
-    }
-})
-
-
-const port = 8080
-
-server.listen(port,() => {
+app.listen(port,() => {
     console.log(`http://localhost:${port}`)
-
-    setTimeout(() => {
-
-        axios.get("http://localhost:8080").then(res => {
-            console.log(`server response: ${res.statusText}`);
-            console.log(`server code: ${res.status}`)
-        }).catch(err => {
-            console.error(err.message);
-        })
-
-    },500)
 })
